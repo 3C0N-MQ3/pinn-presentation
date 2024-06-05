@@ -1,0 +1,91 @@
+\begin{frame}{Application: PINN in Finance}
+    Noguer i Alonso, Miquel and Antolin Camarena, Julian, Physics-Informed Neural Networks (PINNs) in Finance (October 10, 2023). Available at SSRN: \url{https://ssrn.com/abstract=4598180} or \url{http://dx.doi.org/10.2139/ssrn.4598180}
+\end{frame}
+
+\begin{frame}{Application: PINN in Finance}
+    \begin{block}{Motivation I}
+        In the study of finance, Partial Differential Equations (PDEs) and Stochastic Differential Equations (SDEs) are widely applied to model phenomena.  
+    \end{block}
+
+    \begin{block}{Motivation II}
+        Physics-Informed Neural Networks (PINNs) provide a promising method to solve PDEs by embedding the physical rules into the architecture and training process. 
+    \end{block}
+\end{frame}
+
+\begin{frame}{Dynamic Systems in Finance}
+    \begin{block}{The Black-Scholes Model}
+        \begin{equation}
+            \frac{\partial V}{\partial t} + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + r S \frac{\partial V}{\partial S} - r V = 0
+        \end{equation}
+    \end{block}
+
+    \begin{block}{The Physical Part of Loss Function}
+        \begin{equation}
+            L_{\text{physics}} = \left| \frac{\partial f_{\theta}}{\partial t} + \frac{1}{2} \sigma^2 S^2 \frac{\partial^2 f_{\theta}}{\partial S^2} + r S \frac{\partial f_{\theta}}{\partial S} - r f_{\theta} \right|^2
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Dynamic Systems in Finance}
+    \begin{block}{The Heston Model}
+        \begin{align}
+            dS_t &= r S_t \, dt + \sqrt{v_t} S_t \, dW_t^S \\
+            dv_t &= \kappa (\theta - v_t) \, dt + \xi \sqrt{v_t} \, dW_t^v
+        \end{align}
+        where the Feller condition:
+        \begin{equation}
+            2 \kappa \theta > \xi^2
+        \end{equation}
+    \end{block}
+
+    \begin{block}{The Physical Part of Loss Function}
+        \begin{equation}
+            L_{\text{physics}} = \left| \frac{d f_{\theta}^S}{dt} - r f_{\theta}^S - \sqrt{f_{\theta}^v} f_{\theta}^S \right|^2 + \left| \frac{d f_{\theta}^v}{dt} - \kappa (\theta - f_{\theta}^v) - \xi \sqrt{f_{\theta}^v} \right|^2
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}{PINN Approach with The Heston Model}
+\framesubtitle{Experiment Set Up}
+    \begin{enumerate}
+        \item 10,000 trajectories of simulated asset price-volatility pairs.
+        \item 252 days.
+        \item \(\rho = 0.5\), \(\mu = 0.01\), \(\sigma_S = 2.0\), \(\xi = 0.1\), \(\theta = 0.2\), \(\kappa = 0.075\)
+        \item Repeated 100 times
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Experiment Results}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{img/png3.png}
+        \caption{Log-loss curves of training and validation losses.}
+        \label{fig:log_loss}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Experiment Results}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{img/figure2.png}
+        \caption{Numerical results of Heston PINN. Top panel: Stock price over a trading year in blue, with the mean PINN prediction in black and the confidence bands at one daily standard deviation. Bottom panel: Volatility of the stock price over a trading year in blue, with the mean PINN prediction in black and the confidence bands at one daily standard deviation.}
+        \label{fig:heston_results}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Implication and Limitation}
+    \begin{enumerate}
+        \item PINNs train the Heston model adequately.
+        \item The estimated mean is largely within one daily standard deviation of the ground truth, indicating that the Heston model is being learned relatively well.
+        \item PINNs not only provide accurate predictions but also ensure that these predictions are consistent with known financial rules and structures. 
+        \item The experiment conducted with Heston here is not feasible in reality.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Implication and Limitation}
+    Is it possible to apply this approach to economic studies like macroeconomics?
+
+    Although there is no way to find a parallel universe to test our economic models, we may consider applying this theory to countries whose characteristics converge (for example, OECD countries).
+
+    Xavier X. Sala-i-Martin. (1996). The Classical Approach to Convergence Analysis. The Economic Journal, 106(437), 1019–1036. \url{https://doi.org/10.2307/2235375}
+\end{frame}
